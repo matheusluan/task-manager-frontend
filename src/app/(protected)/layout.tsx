@@ -1,3 +1,4 @@
+import ClientProvider from "@/components/common/client-provider";
 import { api } from "@/lib/api";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -14,7 +15,7 @@ export default async function ProtectedLayout({
     if (!auth) redirect("/");
 
     try {
-        const checkUser = await api.get("/auth/validate", {
+        const checkUser = await api.get("/users/me", {
             headers: {
                 Cookie: `auth=${auth.value}`,
             },
@@ -22,7 +23,7 @@ export default async function ProtectedLayout({
 
         if (checkUser.status !== 200) redirect("/");
 
-        return <>{children}</>;
+        return <ClientProvider user={checkUser.data}>{children}</ClientProvider>;
 
     } catch (error) {
         redirect("/");

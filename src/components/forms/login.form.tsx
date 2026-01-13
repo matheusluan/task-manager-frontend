@@ -45,9 +45,7 @@ export default function LoginForm({
             router.push('/user');
         } catch (err: any) {
             toast.error(
-                err?.response?.status === 401
-                    ? 'Invalid Credentials'
-                    : 'Erro inesperado, tente novamente',
+                err.response.data.message
             );
         }
     }
