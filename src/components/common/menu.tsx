@@ -35,9 +35,6 @@ export function Menu() {
             <section className="fixed bottom-4 left-0 right-0 z-50 mx-auto flex w-[80vw] rounded-xl md:hidden bg-slate-900 shadow-lg">
                 <nav className="flex w-full justify-around py-2">
 
-                    <div className="mb-4 h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center font-semibold">
-                        {user?.name?.[0]?.toUpperCase()}
-                    </div>
 
 
                     <Link href="/user">
@@ -69,7 +66,7 @@ export function Menu() {
             </section>
 
             {/* Desktop sidebar */}
-            <aside className="hidden md:flex w-16 bg-slate-900 text-white flex-col rounded-xl shadow-md">
+            <aside className="hidden md:flex w-14 bg-slate-900 text-white flex-col rounded-xl shadow-md">
                 <nav className="flex-1 p-3 flex flex-col gap-2">
                     <div className="h-9 w-9 rounded-full mb-4 bg-white flex items-center text-black justify-center font-semibold">
                         {user?.name?.[0]?.toUpperCase()}

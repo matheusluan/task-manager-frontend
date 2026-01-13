@@ -48,7 +48,12 @@ export default function Page() {
         try {
             setCreating(true);
 
-            await api.post("/tasks", values);
+            const payload = {
+                ...values,
+                ...(values.dueDate ? {} : { dueDate: undefined }),
+            };
+
+            await api.post("/tasks", payload);
 
             toast.success("Task created!");
             reset();

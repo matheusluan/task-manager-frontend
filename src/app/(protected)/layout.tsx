@@ -11,9 +11,7 @@ export default async function ProtectedLayout({
     const cookieStore = await cookies();
     const auth = cookieStore.get("auth");
 
-
     if (!auth) redirect("/logout");
-
 
     try {
         const checkUser = await api.get("/users/me", {
