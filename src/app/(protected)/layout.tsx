@@ -14,7 +14,7 @@ export default async function ProtectedLayout({
     if (!auth) redirect("/");
 
     try {
-        const checkUser = await api.get("/users/me", {
+        const checkUser = await api.get("/auth/validate", {
             headers: {
                 Cookie: `auth=${auth.value}`,
             },
@@ -23,6 +23,7 @@ export default async function ProtectedLayout({
         if (checkUser.status !== 200) redirect("/");
 
         return <>{children}</>;
+
     } catch (error) {
         redirect("/");
     }
