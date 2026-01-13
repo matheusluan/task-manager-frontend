@@ -1,4 +1,13 @@
-export default function Page() {
+import RegisterForm from "@/components/forms/register.form";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-    return <div><h1>Register</h1></div>
+export default async function RegisterPage() {
+    const list = await cookies();
+
+    const auth = list.get("auth");
+
+    if (auth) return redirect("/user");
+
+    return <RegisterForm />
 }
