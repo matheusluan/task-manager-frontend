@@ -1,25 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
-import { api } from "@/lib/api";
-import { Button } from "../ui/button";
-import { LogOutIcon } from "lucide-react";
 import { userStore } from "@/lib/stores/user.store";
 
 export default function Header() {
-    const router = useRouter();
-    const { user, clearUser } = userStore();
 
-    async function handleLogout() {
-        try {
-            await api.post("auth/logout")
-            clearUser();
-            router.push("/")
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    const { user } = userStore();
     return (
         <header
             className="
@@ -38,14 +23,6 @@ export default function Header() {
                 <span className="text-sm text-muted-foreground">
                     {user?.name}
                 </span>
-
-                <div className="h-9 w-9 rounded-full bg-primary/20 flex items-center justify-center font-semibold">
-                    {user?.name?.[0]?.toUpperCase()}
-                </div>
-
-                <Button onClick={handleLogout} variant="ghost" className="h-9 w-9 rounded-full flex items-center justify-center font-semibold cursor-pointer">
-                    <LogOutIcon />
-                </Button>
             </div>
         </header>
     );

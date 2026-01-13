@@ -8,11 +8,12 @@ export default async function ProtectedLayout({
 }: {
     children: React.ReactNode;
 }) {
-    const list = await cookies();
+    const cookieStore = await cookies();
+    const auth = cookieStore.get("auth");
 
-    const auth = list.get("auth");
 
-    if (!auth) redirect("/");
+    if (!auth) redirect("/logout");
+
 
     try {
         const checkUser = await api.get("/users/me", {
@@ -21,12 +22,13 @@ export default async function ProtectedLayout({
             },
         });
 
-        if (checkUser.status !== 200) redirect("/");
+        return (
+            <ClientProvider user={checkUser.data}>
+                {children}
+            </ClientProvider>
+        );
 
-        return <ClientProvider user={checkUser.data}>{children}</ClientProvider>;
-
-    } catch (error) {
-        redirect("/");
+    } catch {
+        redirect("/logout");
     }
-
 }
