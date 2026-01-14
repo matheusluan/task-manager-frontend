@@ -33,10 +33,10 @@ export function TaskCard({ task }: TaskCardProps) {
             >
                 <div className="flex justify-between gap-3 overflow-hidden">
                     <div className="flex flex-col gap-2 overflow-hidden">
-                        <h3 className="font-semibold text-gray-900 truncate">
+                        <h3 title={task.title} className="text-lg font-semibold text-gray-900 truncate">
                             {task.title}
                         </h3>
-                        <p className="text-xs text-gray-600 line-clamp-3">
+                        <p className="text-xs text-gray-600 truncate max-w-100">
                             {task.description || "No description"}
                         </p>
                     </div>
