@@ -20,20 +20,37 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select";
-import { columns } from "@/lib/columns/task.columns";
+import { columns as baseColumns } from "@/lib/columns/task.columns";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { Input } from "@/components/ui/input";
 
 export default function TasksPage() {
     const [tasks, setTasks] = useState<any[]>([]);
     const [meta, setMeta] = useState<any>({ page: 1, totalPages: 1, totalItems: 0 });
     const [loading, setLoading] = useState(true);
+
     const [page, setPage] = useState(1);
     const [take, setTake] = useState(10);
 
-    const fetchTasks = async (page: number, take: number) => {
+    const [titleFilter, setTitleFilter] = useState("");
+    const [statusFilter, setStatusFilter] = useState("ALL");
+    const [priorityFilter, setPriorityFilter] = useState("ALL");
+    const [orderBy, setOrderBy] = useState("createdAt");
+
+    const fetchTasks = async () => {
         setLoading(true);
         try {
-            const { data } = await api.get("/tasks", { params: { page, limit: take } });
+            const { data } = await api.get("/tasks", {
+                params: {
+                    page,
+                    limit: take,
+                    title: titleFilter || undefined,
+                    status: statusFilter === "ALL" ? undefined : statusFilter,
+                    priority: priorityFilter === "ALL" ? undefined : priorityFilter,
+                    order: orderBy,
+                },
+            });
+
             setTasks(data.data);
             setMeta(data.meta);
         } catch (err) {
@@ -44,18 +61,18 @@ export default function TasksPage() {
     };
 
     useEffect(() => {
-        fetchTasks(page, take);
-    }, [page, take]);
+        fetchTasks();
+    }, [page, take, titleFilter, statusFilter, priorityFilter, orderBy]);
 
     const table = useReactTable({
         data: tasks,
-        columns,
+        columns: baseColumns,
         getCoreRowModel: getCoreRowModel(),
     });
 
     return (
         <div className="py-4 space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col gap-1">
                     <h2 className="text-xl font-semibold">Tasks</h2>
                     <span className="text-gray-500">Manage your tasks here</span>
@@ -68,56 +85,117 @@ export default function TasksPage() {
                 </Link>
             </div>
 
-            {
-                loading ? <Loader2 className="mx-auto animate-spin my-10" /> :
-                    <div className="rounded-md border">
-                        <Table>
-                            <TableHeader>
-                                {table.getHeaderGroups().map(headerGroup => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map(header => (
-                                            <TableHead key={header.id}>
-                                                {flexRender(header.column.columnDef.header, header.getContext())}
-                                            </TableHead>
+            {/* Filters */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                {/* Title Filter */}
+                <div className="flex flex-col">
+                    <label className="text-sm text-gray-600">Title</label>
+                    <Input
+                        placeholder="Search title..."
+                        value={titleFilter}
+                        onChange={(e) => setTitleFilter(e.target.value)}
+                        className="w-full"
+                    />
+                </div>
+
+                {/* Status Filter */}
+                <div className="flex flex-col">
+                    <label className="text-sm text-gray-600">Status</label>
+                    <Select value={statusFilter} onValueChange={(val) => setStatusFilter(val)}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ALL">All</SelectItem>
+                            <SelectItem value="PENDING">Pending</SelectItem>
+                            <SelectItem value="IN_PROGRESS">In Progress</SelectItem>
+                            <SelectItem value="DONE">Done</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                {/* Priority Filter */}
+                <div className="flex flex-col">
+                    <label className="text-sm text-gray-600">Priority</label>
+                    <Select value={priorityFilter} onValueChange={(val) => setPriorityFilter(val)}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="All" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="ALL">All</SelectItem>
+                            <SelectItem value="LOW">Low</SelectItem>
+                            <SelectItem value="MEDIUM">Medium</SelectItem>
+                            <SelectItem value="HIGH">High</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+
+                {/* Order By Filter */}
+                <div className="flex flex-col">
+                    <label className="text-sm text-gray-600">Order By</label>
+                    <Select value={orderBy} onValueChange={(val) => setOrderBy(val)}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Created At" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="createdAt">Created At</SelectItem>
+                            <SelectItem value="dueDate">Due Date</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+
+            {/* Table */}
+            {loading ? (
+                <Loader2 className="mx-auto animate-spin my-10" />
+            ) : (
+                <div className="rounded-md border">
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id}>
+                                    {headerGroup.headers.map((header) => (
+                                        <TableHead key={header.id}>
+                                            {flexRender(header.column.columnDef.header, header.getContext())}
+                                        </TableHead>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+
+                        <TableBody>
+                            {table.getRowModel().rows.length ? (
+                                table.getRowModel().rows.map((row) => (
+                                    <TableRow key={row.id}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                            </TableCell>
                                         ))}
                                     </TableRow>
-                                ))}
-                            </TableHeader>
-
-                            <TableBody>
-                                {table.getRowModel().rows.length ? (
-                                    table.getRowModel().rows.map(row => (
-                                        <TableRow key={row.id}>
-                                            {row.getVisibleCells().map(cell => (
-                                                <TableCell key={cell.id}>
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
-                                            ))}
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={columns.length} className="h-24 text-center">
-                                            No results.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
-            }
-
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={baseColumns.length} className="h-24 text-center">
+                                        No results.
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
 
             {/* Pagination */}
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                     <span className="text-sm">Rows:</span>
-                    <Select value={String(take)} onValueChange={(val) => setTake(Number(val))} >
+                    <Select value={String(take)} onValueChange={(val) => setTake(Number(val))}>
                         <SelectTrigger className="w-20 cursor-pointer">
                             <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
-                            {[1, 5, 10, 20].map(n => (
+                            {[1, 5, 10, 20].map((n) => (
                                 <SelectItem key={n} value={String(n)}>
                                     {n}
                                 </SelectItem>
