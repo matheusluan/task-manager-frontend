@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,12 +21,14 @@ export default function EditTaskPage() {
     const params = useParams();
     const taskId = params?.id as string;
 
-    const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
 
     const { handleSubmit, register, reset, control, formState: { errors } } = useForm<UpdateTaskSchema>({
         resolver: zodResolver(updateTaskSchema),
     });
+
     const fetchTask = async () => {
         try {
             const res = await api.get(`/tasks/${taskId}`);
@@ -50,7 +52,23 @@ export default function EditTaskPage() {
     // Fetch task data
     useEffect(() => {
         fetchTask();
-    }, [taskId, reset]);
+    }, []);
+
+    async function onDelete() {
+        const confirm = window.confirm("Are you sure you want to delete this task?");
+        if (!confirm) return;
+
+        try {
+            setDeleting(true);
+            await api.delete(`/tasks/${taskId}`);
+            toast.success("Task deleted!");
+            router.push("/tasks");
+        } catch {
+            toast.error("Error deleting task");
+        } finally {
+            setDeleting(false);
+        }
+    }
 
     async function onSubmit(values: UpdateTaskSchema) {
         try {
@@ -81,7 +99,24 @@ export default function EditTaskPage() {
 
     return (
         <section className="bg-background rounded-lg py-4 space-y-4">
-            <h2 className="text-xl font-semibold">Edit Task</h2>
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-semibold">Edit Task</h2>
+
+                <Button
+                    variant="destructive"
+                    size="icon"
+                    onClick={onDelete}
+                    disabled={deleting}
+                    type="button"
+                >
+                    {deleting ? (
+                        <Loader2 className="animate-spin" />
+                    ) : (
+
+                        <Trash2 />
+                    )}
+                </Button>
+            </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FieldGroup>
