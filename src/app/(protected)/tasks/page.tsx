@@ -158,92 +158,92 @@ export default function TasksPage() {
                         ))}
                     </div>
 
+                    <div className="hidden md:block space-y-4">
 
-                    {/* Table for tablets / desktop */}
-                    <div className="rounded-md border hidden md:block">
-                        <Table>
-                            <TableHeader>
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <TableRow key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => (
-                                            <TableHead key={header.id}>
-                                                {flexRender(header.column.columnDef.header, header.getContext())}
-                                            </TableHead>
-                                        ))}
-                                    </TableRow>
-                                ))}
-                            </TableHeader>
-
-                            <TableBody>
-                                {table.getRowModel().rows.length ? (
-                                    table.getRowModel().rows.map((row) => (
-                                        <TableRow key={row.id}>
-                                            {row.getVisibleCells().map((cell) => (
-                                                <TableCell key={cell.id}>
-                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                                </TableCell>
+                        {/* Table for tablets / desktop */}
+                        <div className="rounded-md border">
+                            <Table>
+                                <TableHeader>
+                                    {table.getHeaderGroups().map((headerGroup) => (
+                                        <TableRow key={headerGroup.id}>
+                                            {headerGroup.headers.map((header) => (
+                                                <TableHead key={header.id}>
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
+                                                </TableHead>
                                             ))}
                                         </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell colSpan={baseColumns.length} className="h-24 text-center">
-                                            No results.
-                                        </TableCell>
-                                    </TableRow>
-                                )}
-                            </TableBody>
-                        </Table>
+                                    ))}
+                                </TableHeader>
+
+                                <TableBody>
+                                    {table.getRowModel().rows.length ? (
+                                        table.getRowModel().rows.map((row) => (
+                                            <TableRow key={row.id}>
+                                                {row.getVisibleCells().map((cell) => (
+                                                    <TableCell key={cell.id}>
+                                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                    </TableCell>
+                                                ))}
+                                            </TableRow>
+                                        ))
+                                    ) : (
+                                        <TableRow>
+                                            <TableCell colSpan={baseColumns.length} className="h-24 text-center">
+                                                No results.
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+
+                        {/* Pagination */}
+                        <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm">Rows:</span>
+                                <Select value={String(take)} onValueChange={(val) => setTake(Number(val))}>
+                                    <SelectTrigger className="w-20 cursor-pointer">
+                                        <SelectValue placeholder="Select" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {[1, 5, 10, 20].map((n) => (
+                                            <SelectItem key={n} value={String(n)}>
+                                                {n}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="flex gap-2 items-center">
+                                <Button
+                                    variant="outline"
+                                    size="icon"
+                                    disabled={page <= 1}
+                                    onClick={() => setPage(page - 1)}
+                                    className="cursor-pointer"
+                                >
+                                    <ChevronLeft />
+                                </Button>
+
+                                <span className="text-sm px-2">
+                                    {page} of {meta.totalPages}
+                                </span>
+
+                                <Button
+                                    size="icon"
+                                    variant="outline"
+                                    disabled={page >= meta.totalPages}
+                                    onClick={() => setPage(page + 1)}
+                                    className="cursor-pointer"
+                                >
+                                    <ChevronRight />
+                                </Button>
+                            </div>
+                        </div>
                     </div>
-
-
                 </>
             )}
-
-            {/* Pagination */}
-            <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                    <span className="text-sm">Rows:</span>
-                    <Select value={String(take)} onValueChange={(val) => setTake(Number(val))}>
-                        <SelectTrigger className="w-20 cursor-pointer">
-                            <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {[1, 5, 10, 20].map((n) => (
-                                <SelectItem key={n} value={String(n)}>
-                                    {n}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                <div className="flex gap-2 items-center">
-                    <Button
-                        variant="outline"
-                        size="icon"
-                        disabled={page <= 1}
-                        onClick={() => setPage(page - 1)}
-                        className="cursor-pointer"
-                    >
-                        <ChevronLeft />
-                    </Button>
-
-                    <span className="text-sm px-2">
-                        {page} of {meta.totalPages}
-                    </span>
-
-                    <Button
-                        size="icon"
-                        variant="outline"
-                        disabled={page >= meta.totalPages}
-                        onClick={() => setPage(page + 1)}
-                        className="cursor-pointer"
-                    >
-                        <ChevronRight />
-                    </Button>
-                </div>
-            </div>
         </div>
     );
 }
