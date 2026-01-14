@@ -96,10 +96,10 @@ export default function LoginForm({
 
                                 <Field>
                                     <Button type="submit" disabled={isSubmitting} className='cursor-pointer mt-2'>
-                                        {isSubmitting && (
+                                        {isSubmitting ? (
                                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        )}
-                                        Login
+                                        ) : 'Login'}
+
                                     </Button>
                                 </Field>
 

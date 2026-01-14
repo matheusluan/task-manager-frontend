@@ -23,12 +23,12 @@ export default function ClientProvider({
 
 
     return (
-        <div className="flex items-center justify-center min-h-dvh">
+        <div className="flex items-center justify-center min-h-dvh ">
             <div className="flex gap-2 min-h-dvh md:min-h-[80dvh] ">
                 {/* Left bar on Desktop and float bar on mobile */}
                 <Menu />
 
-                <div className="relative max-w-300 min-w-screen md:min-w-[60vw] w-full rounded-lg min-h-dvh md:min-h-[80dvh] overflow-hidden bg-white">
+                <div className="relative max-w-300 min-w-screen md:min-w-[60vw] w-full rounded-lg min-h-dvh md:min-h-[80dvh] overflow-hidden bg-white pb-20">
 
                     <Header />
 
