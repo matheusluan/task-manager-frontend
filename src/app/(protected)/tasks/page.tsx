@@ -152,7 +152,7 @@ export default function TasksPage() {
             ) : (
                 <>
                     {/* Cards for mobiles */}
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 md:hidden">
                         {tasks.map(task => (
                             <TaskCard key={task.id} task={task} />
                         ))}
