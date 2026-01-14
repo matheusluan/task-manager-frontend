@@ -16,10 +16,10 @@ export default function HomeTasksRows() {
         const fetchTasks = async () => {
             setLoading(true);
             try {
-                const res = await api.get("/tasks", {
+                const { data } = await api.get("/tasks", {
                     params: { order: "dueDate", limit: 20 },
                 });
-                setTasks(res.data.data);
+                setTasks(data);
             } catch (err) {
                 console.error(err);
             } finally {
@@ -53,12 +53,12 @@ export default function HomeTasksRows() {
             >
                 <div className="flex flex-col gap-2 overflow-hidden h-40">
                     <h3 className="font-semibold text-gray-900 truncate">{task.title}</h3>
-                    <p className="text-sm text-gray-700 line-clamp-3">{task.description || "No description"}</p>
+                    <p className="text-xs text-gray-700 line-clamp-3">{task.description || "No description"}</p>
                 </div>
 
-                <div className="mt-2 flex justify-between items-center text-sm">
+                <div className="mt-2 flex justify-between items-center text-xs gap-1">
                     {task.dueDate ? (
-                        <span className="text-gray-700 font-medium">
+                        <span className="text-gray-700 font-medium text-xs">
                             Due: {new Date(task.dueDate).toLocaleDateString()}
                         </span>
                     ) : (
@@ -66,7 +66,7 @@ export default function HomeTasksRows() {
                     )}
 
                     <span
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${priorityText[task.priority] || "text-gray-700"
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${priorityText[task.priority] || "text-gray-700"
                             } border border-current`}
                     >
                         {task.priority}
@@ -79,7 +79,7 @@ export default function HomeTasksRows() {
     return (
         <section className="bg-background rounded-lg p-6 space-y-10">
             <div className="flex flex-col gap-1">
-                <h2 className="text-2xl font-bold truncate">Welcome back, {user?.name}!</h2>
+                <h2 className="text-lg font-bold truncate">Welcome back, {user?.name}!</h2>
             </div>
 
             {/* Pending Tasks Row */}

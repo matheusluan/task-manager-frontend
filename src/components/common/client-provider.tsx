@@ -13,26 +13,25 @@ export default function ClientProvider({
     user: IUser;
     children: React.ReactNode;
 }) {
-
     const { setUser } = userStore();
 
     useEffect(() => {
         setUser(user);
     }, [user, setUser]);
 
-
-
     return (
-        <div className="flex items-center justify-center min-h-dvh ">
-            <div className="flex gap-2 min-h-dvh md:min-h-[80dvh] ">
-                {/* Left bar on Desktop and float bar on mobile */}
+        <div className="min-h-dvh bg-slate-100 flex md:items-center md:justify-center">
+            <div className="flex w-full h-dvh md:h-[80dvh] md:max-w-7xl md:gap-4 md:p-2">
+
+                {/* Menu */}
                 <Menu />
 
-                <div className="relative max-w-300 min-w-screen md:min-w-[60vw] w-full rounded-lg min-h-dvh md:min-h-[80dvh] overflow-hidden bg-white pb-20">
+                {/* Main container */}
+                <div className="relative flex-1 w-full h-dvh md:h-full bg-white md:rounded-xl md:shadow-lg overflow-y-auto overflow-x-hidden pb-20">
 
                     <Header />
 
-                    <main className="px-6">
+                    <main className="px-4 md:px-6 pt-4">
                         {children}
                     </main>
 
