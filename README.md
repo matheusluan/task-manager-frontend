@@ -1,8 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🗂️ Task Manager — Full Stack Technical Challenge
 
+This project was developed as part of a **Full Stack Technical Test / Challenge**.
+
+> **Live Demo (Frontend):**  
+> 👉 https://task-manager-frontend-wvxv.onrender.com/  
+>  
+> **Backend API:**  
+> 👉 https://task-manager-backend-85lz.onrender.com/
+
+> The frontend, backend and database are all hosted on **Render**.
+
+---
+
+## 🧪 Challenge Description
+
+**Project Title:** Simple SaaS-style Task Manager  
+
+The goal of this challenge was to build a minimal, full-stack Task Manager web app following clean architectural principles and SaaS patterns.
+
+### Core Requirements
+
+#### Frontend
+- React with TypeScript (Next.js optional)
+- Authentication (Sign up & Login)
+- Task list retrieved dynamically from backend:
+  - Pagination
+  - Filtering (by status and keyword)
+  - Sorting (by creation date and completion status)
+- Task CRUD:
+  - Create, view, edit, complete and delete tasks
+- Responsive UI and user feedback
+
+#### Backend
+- Node.js with NestJS
+- Prisma ORM
+- PostgreSQL
+- JWT authentication
+- Full Task CRUD API
+- DTO validation and proper error handling
+
+---
+
+## 🚀 Tech Stack
+
+### Frontend
+- **Next.js 14 (App Router)**
+- **React**
+- **TypeScript**
+- **Tailwind CSS**
+- **Zustand** for global state
+- **Axios** for API communication
+- **JWT authentication**
+
+### Backend
+- **NestJS**
+- **Prisma ORM**
+- **PostgreSQL**
+- **JWT authentication**
+
+---
+
+## 📄 Pages
+
+| Route | Description |
+|------|-------------|
+| `/` | Login |
+| `/register` | User registration |
+| `/user` | Main dashboard |
+| `/tasks` | Task management |
+| `/profile` | User profile and settings |
+
+---
+
+## 🔐 Authentication
+
+- The backend returns a JWT after login or registration.
+- The token is currently stored in `localStorage`.
+- Axios automatically attaches the token to requests via interceptors.
+- If the token is missing or invalid, the user is redirected to the login page.
+
+---
 ## Getting Started
 
-First, run the development server:
+Running the development server:
 
 ```bash
 npm run dev
@@ -15,22 +95,3 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
