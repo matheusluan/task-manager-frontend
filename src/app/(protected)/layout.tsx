@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { userStore } from "@/lib/stores/user.store";
 import ClientProvider from "@/components/common/client-provider";
+import { toast } from "sonner";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -33,9 +34,11 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
                 setUser(res.data);
                 setLoading(false);
             } catch (err) {
+                toast.info("Invalid or expired token.")
                 clearUser();
                 localStorage.removeItem("token");
                 router.replace("/");
+
             }
         };
 
