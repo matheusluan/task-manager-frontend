@@ -16,7 +16,7 @@ This project was developed as part of a **Full Stack Technical Test / Challenge*
 
 **Project Title:** Simple SaaS-style Task Manager  
 
-The goal of this challenge was to build a minimal, full-stack Task Manager web app following clean architectural principles and SaaS patterns.
+The goal of this challenge was to build a minimal, full-stack Task Manager web app.
 
 ### Core Requirements
 
