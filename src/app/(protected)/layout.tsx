@@ -7,6 +7,7 @@ import { api } from "@/lib/api";
 import { userStore } from "@/lib/stores/user.store";
 import ClientProvider from "@/components/common/client-provider";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
     const router = useRouter();
@@ -45,7 +46,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         loadUser();
     }, [router, setUser, clearUser, user]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loader2 className="m-auto animate-spin mt-10" />;
     if (!user) return null;
 
     return <ClientProvider user={user}>{children}</ClientProvider>;
