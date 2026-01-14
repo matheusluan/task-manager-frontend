@@ -44,7 +44,7 @@ The goal of this challenge was to build a minimal, full-stack Task Manager web a
 ## 🚀 Tech Stack
 
 ### Frontend
-- **Next.js 14 (App Router)**
+- **Next.js 16 (App Router)**
 - **React**
 - **TypeScript**
 - **Tailwind CSS**
