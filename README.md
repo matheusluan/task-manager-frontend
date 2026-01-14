@@ -80,18 +80,19 @@ The goal of this challenge was to build a minimal, full-stack Task Manager web a
 - If the token is missing or invalid, the user is redirected to the login page.
 
 ---
-## Getting Started
-
-Running the development server:
+## Project setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+$ yarn install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Compile and run the project
+
+```bash
+# development
+$ yarn dev
+
+# production mode
+$ yarn build && yarn start
+```
+
