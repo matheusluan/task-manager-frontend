@@ -1,13 +1,15 @@
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+'use client';
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import LoginForm from "@/components/forms/login.form";
 
-export default async function LoginPage() {
-  const list = await cookies();
+export default function LoginPage() {
+  const router = useRouter();
 
-  const auth = list.get("auth");
+  useEffect(() => {
+    if (localStorage.getItem("token")) router.replace("/user");
+  }, []);
 
-  if (auth) return redirect("/user");
-
-  return <LoginForm />
+  return <LoginForm />;
 }

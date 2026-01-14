@@ -1,13 +1,15 @@
+'use client';
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import RegisterForm from "@/components/forms/register.form";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
-export default async function RegisterPage() {
-    const list = await cookies();
+export default function RegisterPage() {
+    const router = useRouter();
 
-    const auth = list.get("auth");
+    useEffect(() => {
+        if (localStorage.getItem("token")) router.replace("/user");
+    }, []);
 
-    if (auth) return redirect("/user");
-
-    return <RegisterForm />
+    return <RegisterForm />;
 }

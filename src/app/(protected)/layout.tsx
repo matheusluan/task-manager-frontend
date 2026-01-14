@@ -1,32 +1,49 @@
-import ClientProvider from "@/components/common/client-provider";
+'use client';
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { api } from "@/lib/api";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { userStore } from "@/lib/stores/user.store";
+import ClientProvider from "@/components/common/client-provider";
 
-export default async function ProtectedLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    const cookieStore = await cookies();
-    const auth = cookieStore.get("auth");
+export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
+    const router = useRouter();
+    const { user, setUser, clearUser } = userStore();
+    const [loading, setLoading] = useState(true);
 
-    if (!auth) redirect("/logout");
+    useEffect(() => {
+        const loadUser = async () => {
+            const token = localStorage.getItem("token");
 
-    try {
-        const checkUser = await api.get("/users/me", {
-            headers: {
-                Cookie: `auth=${auth.value}`,
-            },
-        });
+            if (!token) {
+                clearUser();
+                localStorage.removeItem("token");
+                router.replace("/");
+                return;
+            }
 
-        return (
-            <ClientProvider user={checkUser.data}>
-                {children}
-            </ClientProvider>
-        );
+            if (user) {
+                setLoading(false);
+                return;
+            }
 
-    } catch {
-        redirect("/logout");
-    }
+            try {
+                const res = await api.get("/users/me");
+                setUser(res.data);
+                setLoading(false);
+            } catch (err) {
+                clearUser();
+                localStorage.removeItem("token");
+                router.replace("/");
+            }
+        };
+
+        loadUser();
+    }, [router, setUser, clearUser, user]);
+
+    if (loading) return <div>Loading...</div>;
+    if (!user) return null;
+
+    return <ClientProvider user={user}>{children}</ClientProvider>;
 }

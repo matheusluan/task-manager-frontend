@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
@@ -15,23 +15,15 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {
-    Field,
-    FieldGroup,
-    FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { useRouter } from "next/navigation";
 
-export default function Page() {
+export default function ProfilePage() {
     const router = useRouter();
     const { user, setUser, clearUser } = userStore();
-    const [deleting, setDeleting] = useState(false)
-    const {
-        handleSubmit,
-        register,
-        reset,
-        formState: { isSubmitting, errors },
-    } = useForm<UpdateUserSchema>({
+    const [deleting, setDeleting] = useState(false);
+
+    const { handleSubmit, register, reset, formState: { isSubmitting, errors } } = useForm<UpdateUserSchema>({
         resolver: zodResolver(updateUserSchema),
     });
 
@@ -50,11 +42,7 @@ export default function Page() {
 
     async function onSubmit(values: UpdateUserSchema) {
         try {
-            const payload: any = {
-                name: values.name,
-                email: values.email,
-            };
-
+            const payload: any = { name: values.name, email: values.email };
             if (values.password) payload.password = values.password;
 
             const { data: updatedUser } = await api.put("/users", payload);
@@ -69,15 +57,17 @@ export default function Page() {
 
     async function deleteUser() {
         try {
-            setDeleting(true)
-            await api.delete("/users")
-            clearUser()
-            toast.success("Successfully deleted")
-            router.push("/")
-        } catch (error) {
-            toast.error("Error while deleting account")
+            setDeleting(true);
+            await api.delete("/users");
+
+            clearUser();
+            localStorage.removeItem("token");
+            toast.success("Successfully deleted");
+            router.push("/");
+        } catch {
+            toast.error("Error while deleting account");
         } finally {
-            setDeleting(false)
+            setDeleting(false);
         }
     }
 
@@ -89,7 +79,14 @@ export default function Page() {
                     <span className="text-gray-500">Update your account information</span>
                 </div>
 
-                <Button type="button" size="icon" className="cursor-pointer" variant="destructive" onClick={deleteUser} disabled={deleting}>
+                <Button
+                    type="button"
+                    size="icon"
+                    variant="destructive"
+                    onClick={deleteUser}
+                    disabled={deleting}
+                    className="cursor-pointer"
+                >
                     {deleting ? <Loader2 className="animate-spin" /> : <Trash />}
                 </Button>
             </div>
@@ -117,9 +114,7 @@ export default function Page() {
                     <Field>
                         <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
                         <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
-                        {errors.confirmPassword && (
-                            <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>
-                        )}
+                        {errors.confirmPassword && <p className="text-sm text-red-500">{errors.confirmPassword.message}</p>}
                     </Field>
 
                     <Field>

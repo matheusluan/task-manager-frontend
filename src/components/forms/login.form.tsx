@@ -20,6 +20,7 @@ import {
     FieldGroup,
     FieldLabel,
 } from '@/components/ui/field';
+import { userStore } from '@/lib/stores/user.store';
 
 
 export default function LoginForm({
@@ -27,6 +28,7 @@ export default function LoginForm({
     ...props
 }: React.ComponentProps<'div'>) {
     const router = useRouter();
+    const { setUser } = userStore();
 
     const form = useForm<LoginSchema>({
         resolver: zodResolver(loginSchema),
@@ -40,7 +42,9 @@ export default function LoginForm({
 
     async function onSubmit(data: LoginSchema) {
         try {
-            await api.post('/auth/login', data);
+            const { data: response } = await api.post('/auth/login', data);
+            setUser(response?.user);
+            localStorage.setItem("token", response?.access_token);
             toast.success('Welcome!!');
             router.push('/user');
         } catch (err: any) {

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { userStore } from '@/lib/stores/user.store';
 import { Home, User, ListCheck, LogOutIcon } from 'lucide-react';
-import { api } from '@/lib/api';
+
 
 export function Menu() {
     const router = useRouter();
@@ -22,7 +22,6 @@ export function Menu() {
 
     async function handleLogout() {
         try {
-            await api.post("auth/logout")
             clearUser();
             router.push("/")
         } catch (error) {
@@ -34,8 +33,6 @@ export function Menu() {
             {/* Mobile bottom bar */}
             <section className="fixed bottom-4 left-0 right-0 z-50 mx-auto flex w-[80vw] rounded-xl md:hidden bg-slate-900 shadow-lg">
                 <nav className="flex w-full justify-around py-2">
-
-
 
                     <Link href="/user">
                         <Button size="icon" variant="ghost" className={itemClass('/user')}>

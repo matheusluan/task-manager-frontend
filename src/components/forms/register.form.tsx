@@ -2,29 +2,24 @@
 
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Loader2 } from 'lucide-react';
+
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { Loader2 } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { registerSchema, RegisterSchema } from '@/lib/schemas/register.schema';
 import { api } from '@/lib/api';
+import { userStore } from '@/lib/stores/user.store';
+import { registerSchema, RegisterSchema } from '@/lib/schemas/register.schema';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import {
-    Field,
-    FieldDescription,
-    FieldGroup,
-    FieldLabel,
-} from '@/components/ui/field';
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
 
-export default function RegisterForm({
-    className,
-    ...props
-}: React.ComponentProps<'div'>) {
+export default function RegisterForm({ className, ...props }: React.ComponentProps<'div'>) {
     const router = useRouter();
+    const setUser = userStore((state) => state.setUser);
 
     const form = useForm<RegisterSchema>({
         resolver: zodResolver(registerSchema),
@@ -40,26 +35,30 @@ export default function RegisterForm({
 
     async function onSubmit(data: RegisterSchema) {
         try {
-            await api.post('/auth/register', {
+            const { data: response } = await api.post('/auth/register', {
                 name: data.name,
                 email: data.email,
                 password: data.password,
             });
 
-            toast.success('Registered!');
+
+            setUser(response.user);
+
+            localStorage.setItem('token', response.access_token);
+
+            toast.success('Registered successfully!');
             router.push('/user');
         } catch (err: any) {
             toast.error(
-                err?.response?.status === 409 ? 'Email already exist' : 'Error',
+                err?.response?.status === 409
+                    ? 'Email already exists'
+                    : err?.response?.data?.message || 'Registration failed'
             );
         }
     }
 
     return (
-        <div
-            className={cn('flex items-center justify-center min-h-dvh', className)}
-            {...props}
-        >
+        <div className={cn('flex items-center justify-center min-h-dvh', className)} {...props}>
             <div className="min-w-80 md:min-w-130 max-w-225 flex flex-col gap-1">
                 <Card className="overflow-hidden p-0">
                     <CardContent className="grid p-0 md:grid-cols-2">
@@ -103,9 +102,7 @@ export default function RegisterForm({
                                 </Field>
 
                                 <Field>
-                                    <FieldLabel htmlFor="confirmPassword">
-                                        Confirm password
-                                    </FieldLabel>
+                                    <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
                                     <Input
                                         id="confirmPassword"
                                         type="password"
@@ -120,9 +117,7 @@ export default function RegisterForm({
                                         disabled={isSubmitting}
                                         className="cursor-pointer mt-2"
                                     >
-                                        {isSubmitting && (
-                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                        )}
+                                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                         Create account
                                     </Button>
                                 </Field>
