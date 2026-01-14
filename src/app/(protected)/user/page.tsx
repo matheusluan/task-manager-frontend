@@ -19,7 +19,7 @@ export default function HomeTasksRows() {
                 const { data } = await api.get("/tasks", {
                     params: { order: "dueDate", limit: 20 },
                 });
-                setTasks(data);
+                setTasks(data.data);
             } catch (err) {
                 console.error(err);
             } finally {
