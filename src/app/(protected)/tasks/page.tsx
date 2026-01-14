@@ -23,6 +23,7 @@ import {
 import { columns as baseColumns } from "@/lib/columns/task.columns";
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
+import { TaskCard } from "@/components/common/task-card";
 
 export default function TasksPage() {
     const [tasks, setTasks] = useState<any[]>([]);
@@ -149,41 +150,54 @@ export default function TasksPage() {
             {loading ? (
                 <Loader2 className="mx-auto animate-spin my-10" />
             ) : (
-                <div className="rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            {table.getHeaderGroups().map((headerGroup) => (
-                                <TableRow key={headerGroup.id}>
-                                    {headerGroup.headers.map((header) => (
-                                        <TableHead key={header.id}>
-                                            {flexRender(header.column.columnDef.header, header.getContext())}
-                                        </TableHead>
-                                    ))}
-                                </TableRow>
-                            ))}
-                        </TableHeader>
+                <>
+                    {/* Cards for mobiles */}
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                        {tasks.map(task => (
+                            <TaskCard key={task.id} task={task} />
+                        ))}
+                    </div>
 
-                        <TableBody>
-                            {table.getRowModel().rows.length ? (
-                                table.getRowModel().rows.map((row) => (
-                                    <TableRow key={row.id}>
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                            </TableCell>
+
+                    {/* Table for tablets / desktop */}
+                    <div className="rounded-md border hidden md:block">
+                        <Table>
+                            <TableHeader>
+                                {table.getHeaderGroups().map((headerGroup) => (
+                                    <TableRow key={headerGroup.id}>
+                                        {headerGroup.headers.map((header) => (
+                                            <TableHead key={header.id}>
+                                                {flexRender(header.column.columnDef.header, header.getContext())}
+                                            </TableHead>
                                         ))}
                                     </TableRow>
-                                ))
-                            ) : (
-                                <TableRow>
-                                    <TableCell colSpan={baseColumns.length} className="h-24 text-center">
-                                        No results.
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
-                </div>
+                                ))}
+                            </TableHeader>
+
+                            <TableBody>
+                                {table.getRowModel().rows.length ? (
+                                    table.getRowModel().rows.map((row) => (
+                                        <TableRow key={row.id}>
+                                            {row.getVisibleCells().map((cell) => (
+                                                <TableCell key={cell.id}>
+                                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                                </TableCell>
+                                            ))}
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell colSpan={baseColumns.length} className="h-24 text-center">
+                                            No results.
+                                        </TableCell>
+                                    </TableRow>
+                                )}
+                            </TableBody>
+                        </Table>
+                    </div>
+
+
+                </>
             )}
 
             {/* Pagination */}
