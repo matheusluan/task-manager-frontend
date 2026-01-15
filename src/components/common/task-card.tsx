@@ -28,7 +28,7 @@ export function TaskCard({ task }: TaskCardProps) {
     return (
         <Link href={`/tasks/${task.id}`} prefetch={false} className="block">
             <div
-                className={`h-48 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between p-5 ${priorityBg[task.priority] || "bg-muted"
+                className={`h-32 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between p-5 ${priorityBg[task.priority] || "bg-muted"
                     }`}
             >
                 <div className="flex justify-between gap-3 overflow-hidden">
@@ -36,7 +36,7 @@ export function TaskCard({ task }: TaskCardProps) {
                         <h3 title={task.title} className="text-lg font-semibold text-gray-900 truncate">
                             {task.title}
                         </h3>
-                        <p className="text-xs text-gray-600 truncate max-w-100">
+                        <p className="text-xs text-gray-600 truncate max-w-48">
                             {task.description || "No description"}
                         </p>
                     </div>
