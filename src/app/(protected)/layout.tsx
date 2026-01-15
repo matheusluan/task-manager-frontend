@@ -46,8 +46,7 @@ export default function ProtectedLayout({ children }: { children: React.ReactNod
         loadUser();
     }, [router, setUser, clearUser, user]);
 
-    if (loading) return <Loader2 className="m-auto animate-spin mt-10" />;
-    if (!user) return null;
+    if (loading || !user) return <Loader2 className="m-auto animate-spin mt-10" />;
 
     return <ClientProvider user={user}>{children}</ClientProvider>;
 }
